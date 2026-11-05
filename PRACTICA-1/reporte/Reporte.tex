@@ -1,6 +1,8 @@
 \documentclass[12pt]{report}
 %======================= Configuración del documento =========================
 \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,mexico]{babel}
 \usepackage{helvet} % Arial/Helvetica
 \renewcommand{\familydefault}{\sfdefault} % Usar sans-serif (Arial)
 \usepackage{geometry}
@@ -8,27 +10,34 @@
 \usepackage{fancyhdr} % Encabezados y pies de página
 \usepackage{setspace}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{caption}
 \usepackage{listings} % Para fragmentos de código
 \usepackage{amsmath}
 \usepackage{comment} % Para poner bloques grandes de comentarios
-\usepackage{xcolor} 
-\lstset{ 
-        language=VHDL, 
-        basicstyle=\ttfamily\small 
-       }
+\usepackage{xcolor}
+\usepackage{hyperref}
 
+\graphicspath{{../images/}}
+\lstset{
+    language=VHDL,
+    basicstyle=\ttfamily\small,
+    frame=single,
+    breaklines=true,
+    showstringspaces=false
+}
 
 % Configuración de encabezado y pie de página
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{Nombre del proyecto de diseño} % Cambiar por el nombre real
-\fancyhead[R]{Fecha de inicio: 20/10/2026}   % Cambiar por la fecha real
+\fancyhead[L]{Laboratorio de Diseño Lógico}
+\fancyhead[R]{Práctica 1}
 \fancyfoot[C]{\thepage}
 
 % Documento
 \begin{document}
-\setlength{\headheight}{14.49998pt}
+\setlength{\headheight}{15pt}
+
 % ------------------- PORTADA -------------------
 \begin{titlepage}
     \centering
@@ -39,7 +48,7 @@
     \vspace{0.5cm}
     {\large Profesor: Eduardo Rodríguez Martínez \par}
     \vspace{2cm}
-    {\Large \textbf{Título del Proyecto de Diseño} \par}
+    {\Large \textbf{Proyecto de Diseño 1: Interruptores, Luces y Multiplexores} \par}
     \vspace{2cm}
     {\large Flores Olivares Omar \par}
     {\large 2243038415 \par}
@@ -54,11 +63,10 @@
 \setstretch{1.2}
 
 \section*{Objetivos del ejercicio}
-Aprender a conectar entradas y salidas a un circuito implementado en un dispositivo reconfigurable, usando la tarjeta de desarrollo DE2 para implementar el circuito, se usarán los interruptores $SW_{17-0}$ como entradas y los LEDs y los Display de 7 segmentos como salidas.
+Aprender a conectar entradas y salidas a un circuito implementado en un dispositivo reconfigurable, usando la tarjeta de desarrollo DE2 para implementar el circuito. Utilizamos los interruptores $SW_{17-0}$ como entradas y los LEDs y displays de siete segmentos como salidas.
 
-
-%El desarrollo y resultados debe incluirse por cada parte de la practica
 \section*{Desarrollo}%=================================
+%El desarrollo y resultados debe incluirse por cada parte de la practica
 % Descripción del ejercicio (no código)
 % Diagrama jerárquico del diseño (insertar imagen con \includegraphics)
 % Descripción del programa; puedes incluir fragmentos de código si es necesario
@@ -69,79 +77,255 @@ Aprender a conectar entradas y salidas a un circuito implementado en un disposit
 %Los diagramas serán hechos a mano, o mediante aplicaciones de diseño asistido por computadora.
 %======================================================
 
+\subsection*{Parte 1}
+\subsubsection*{Descripción del ejercicio}
+En esta primera parte conectamos los interruptores de la tarjeta DE2 con los LEDs rojos para observar directamente el estado de cada entrada. La tarjeta cuenta con 18 interruptores, identificados como $SW_{17-0}$, y 18 LEDs rojos, identificados como $LEDR_{17-0}$. Como ambos grupos tienen la misma cantidad de señales, podemos representarlos mediante vectores y realizar una sola asignación para conectar cada interruptor con el LED correspondiente.
+
+La operación que realizamos consiste en reflejar el vector de entrada en el vector de salida:
+
+\[
+LEDR = SW
+\]
+
+De esta manera, cuando cambiamos el estado de un interruptor, observamos el mismo cambio en el LED rojo que tiene asignado su índice.
+
+\subsubsection*{Descripción del programa}
+El instructivo propone una entidad sencilla que recibe el vector $SW$ como entrada y entrega el vector $LEDR$ como salida. Dentro de la arquitectura basta con realizar la asignación:
+
+\begin{lstlisting}
+LEDR <= SW;
+\end{lstlisting}
+
+Para que las entradas y salidas físicas funcionen en la tarjeta, también debemos seleccionar el dispositivo Cyclone II EP2C35F672C6 e importar las asignaciones de pines correspondientes a la DE2 en Quartus II.
+
+% NOTA: En el repositorio no se encuentra una carpeta o archivo fuente independiente
+% para esta parte introductoria. La descripción anterior corresponde al instructivo.
+
 \subsection*{Parte 2}
-\subsubsection*{Descripción del Ejercicio}
-Hacer un multiplexor 2 a 1 de 8 bits de ancho, usando como base un multiplexor 2 a 1 de 1 bit de ancho.
+\subsubsection*{Descripción del ejercicio}
+Hacemos un multiplexor 2 a 1 de ocho bits de ancho, usando como base un multiplexor 2 a 1 de un bit de ancho.
 
-\textbf{Funcionamiento:}
+El multiplexor base tiene dos entradas, $X$ y $Y$, un selector $S$ y una salida $M$. Esta última refleja la entrada $X$ cuando $S=0$ y la entrada $Y$ cuando $S=1$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figura1.jpg}
+    \caption{Multiplexor 2 a 1 de un bit.}
+    \label{fig:mux2a1}
+\end{figure}
+
+Para extender el multiplexor a ocho bits, definimos cada bit de salida $M$ con la siguiente función booleana:
+
+\[
+M(i)=\overline{S}\cdot X(i)+S\cdot Y(i), \qquad i=0,1,\ldots,7.
+\]
+
+De esta manera, cuando $S=0$ la salida corresponde a $X$, y cuando $S=1$ corresponde a $Y$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figura2.jpg}
+    \caption{Multiplexor 2 a 1 de ocho bits.}
+    \label{fig:mux2a18bits}
+\end{figure}
+
+\subsubsection*{Diagrama jerárquico}
+La jerarquía de los archivos \textit{.vhd} queda de la siguiente manera:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figura3.jpg}
+    \caption{Diagrama jerárquico de la Parte 2.}
+    \label{fig:diagramajerarquico}
+\end{figure}
+
+Podemos observar que el bloque azul representa la tarjeta Altera DE2, mientras que el bloque rojo corresponde al código principal, encargado de invocar al bloque \texttt{mux2a1} para realizar las conexiones entre los ocho bits de las entradas y la salida del multiplexor.
+
+\subsubsection*{Descripción del programa}
+En general, creamos dos archivos \textit{.vhd}:
+
 \begin{itemize}
-    \item El multiplexor base de 1 bit se conforma de las entradas X y Y, un selector S , y una salida M, que refleja la salida X cuando S=0 y la salida Y cuando S=1.
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.6\textwidth]{../images/figura1.jpg}
-        \caption{Multiplexor 2 a 1 de 1 bit}
-        \label{fig:mux2a1}
-        \end{figure}
+    \item \textbf{mux2a1.vhd}: aquí describimos el comportamiento de un MUX 2 a 1 de ocho bits de ancho, con sus dos entradas de ocho bits, su selector de un bit y su salida de ocho bits. En el \textit{ARCHITECTURE} definimos cada bit de $M$ con la siguiente expresión:
 
-    \item El multiplexor 2 a 1 de 8 bits se forma al definir cada bit de salida M con la siguiente función booleana: \(M = \overline{S} \cdot X + S \cdot Y\)
-    Quedando de la siguiente manera:
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.5\textwidth]{../images/figura2.jpg}
-        \caption{Multiplexor 2 a 1 de 8 bits}
-        \label{fig:mux2a18bits}
-        \end{figure}
-\end{itemize}
-
-\subsubsection*{Diagrama Jerárquico}
-La jerarquía de los archivos \textit{.vhd} quedará de la siguiente manera:
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.5\textwidth]{../images/figura3.jpg}
-        \caption{Diagrama Jerárquico de la Parte 2}
-        \label{fig:diagramajerarquico}
-        \end{figure}
-
-Podemos observar que el bloque azul representa la tarjeta Altera DE2, mientras que el bloque rojo corresponde al código principal, encargado de invocar al bloque mux2a1 para realizar las conexiones entre las ocho definiciones de los bits de salida y los switches y LEDs de la tarjeta.
-\subsubsection*{Descripción del Programa}
-En general tenemos que crear dos archivos \textit{.vhd}:
-\begin{itemize}
-    \item \textbf{mux2a1.vhd}: Aquí se describe el comportamiento de un MUX 2 a 1 de 8 bits de ancho, con sus dos entradas de 8 bits, su selector de un bit, y su salida de ocho bits, en el \textit{ARCHITECTURE} deben de ir 8 definiciones para cada bit de M, de la siguiente manera:
-     \begin{lstlisting}[language=VHDL]
-     M(i) <= ((NOT S) AND X(i)) OR (S AND Y);
-     \end{lstlisting}
-    \item \textbf{mux2a1\_8bits.vhd}: El \textit{ENTITY} de este archivo es más estricto, ya que es el puente entre la tarjeta y el comportamiento principal, quedando de la siguiente manera:  
-    \begin{lstlisting}[language=VHDL]
-   ENTITY mux2a1_8bits IS
-       PORT(SIGNAL SW: IN BIT_VECTOR(17 DOWNTO 0);
-            SIGNAL LEDG: OUT BIT_VECTOR(7 DOWNTO 0);
-            SIGNAL LEDR: OUT BIT_VECTOR(17 DOWNTO 0));
-   END mux2a1_8bits;
+    \begin{lstlisting}
+M(i) <= (NOT (S) AND X(i)) OR (S AND Y(i));
     \end{lstlisting}
-    Después en el \textit{ARCHITECTURE} hacemos la instanciación descrita en el Diagrama Jerárquico.
-    \begin{lstlisting}[language=VHDL]
-        conexion1: mux2a1 PORT MAP(SW(7 DOWNTO 0), --X
-                                   SW(15 DOWNTO 8),--Y
-                                   SW(17), LEDG);  --S y M
-        LEDR <= SW;--Refleja las entradas en los leds rojos
-    \end{lstlisting}
-    Es necesario definir el componente \textbf{mux2a1} antes del \textit{BEGIN}
-\end{itemize}
-Posteriormente las asignaciones deberán de ir de la siguiente manera:
-\begin{itemize}
-    \item $SW_{17}$ : Para el selector \textbf{S}.
-    \item $SW_{7-0}$ : Para la entrada \textbf{X}.
-    \item $SW_{15-8}$ : Para la entrada \textbf{Y}.
-    \item Los \textbf{LEDR} se conectan a los \textbf{SW} para monitorear su estado.
-    \item La salida \textbf{M} se conecta a los \textbf{LEDG} para reflejar la salida.
-\end{itemize}
-\begin{comment}
-    \subsection*{Parte 3}
-    \subsection*{Parte 4}
-    \subsection*{Parte 5}
-    \subsection*{Parte 6}
-\end{comment}
 
+    En el archivo que utilizamos, esta operación se escribe para cada uno de los ocho bits de salida.
+
+    \item \textbf{mux2a1\_8bits.vhd}: el \textit{ENTITY} de este archivo recibe el vector de interruptores $SW$ y entrega las salidas $LEDG$ y $LEDR$. En el \textit{ARCHITECTURE} instanciamos el multiplexor anterior y conectamos sus puertos de la siguiente manera:
+
+    \begin{lstlisting}
+conexion1: mux2a1 PORT MAP(SW(7 DOWNTO 0), -- X
+                           SW(15 DOWNTO 8), -- Y
+                           SW(17), LEDG); -- S y M
+LEDR <= SW; -- Refleja las entradas en los LEDs rojos
+    \end{lstlisting}
+
+    También es necesario declarar el componente \textbf{mux2a1} antes del \textit{BEGIN}.
+\end{itemize}
+
+Posteriormente, realizamos las asignaciones de la siguiente manera:
+
+\begin{itemize}
+    \item $SW_{17}$: selector $S$.
+    \item $SW_{7-0}$: entrada $X$.
+    \item $SW_{15-8}$: entrada $Y$.
+    \item Los LEDs rojos (\textbf{LEDR}) se conectan a los switches (\textbf{SW}) para monitorear su estado.
+    \item La salida $M$ se conecta a los LEDs verdes (\textbf{LEDG}) para reflejar el resultado.
+\end{itemize}
+
+\subsection*{Parte 3}
+\subsubsection*{Descripción del ejercicio}
+En esta parte construimos un multiplexor 5 a 1 de un bit a partir de cuatro multiplexores 2 a 1. El circuito permite seleccionar una de las cinco entradas $U,V,W,X,Y$ mediante tres señales de selección: $S_2,S_1,S_0$.
+
+De acuerdo con la conexión de los cuatro multiplexores 2 a 1, primero seleccionamos entre $U$ y $V$ utilizando $S_0$, y también seleccionamos entre $W$ y $X$ con ese mismo selector. Después, con $S_1$ elegimos entre los resultados de esas dos primeras selecciones. Finalmente, $S_2$ permite elegir entre ese resultado y la entrada $Y$.
+
+Por lo tanto, las combinaciones del selector se distribuyen de la siguiente manera:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+$S_2S_1S_0$ & Entrada seleccionada \\
+\hline
+000 & $U$ \\
+001 & $V$ \\
+010 & $W$ \\
+011 & $X$ \\
+100--111 & $Y$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Una vez construido el multiplexor de un bit, lo extendemos a tres bits mediante tres instancias del mismo circuito. Cada instancia procesa una posición de las entradas vectoriales $U,V,W,X,Y$ y produce el bit correspondiente de la salida $M$.
+
+\subsubsection*{Diagrama jerárquico}
+Para organizar el circuito utilizamos una estructura jerárquica. En el primer nivel se encuentra el multiplexor 2 a 1 de un bit; con cuatro instancias de este bloque construimos el multiplexor 5 a 1. Después, mediante tres instancias del multiplexor de un bit, obtenemos el multiplexor 5 a 1 de tres bits. Finalmente, el módulo superior conecta las entradas y salidas con los interruptores y LEDs de la tarjeta DE2.
+
+% PENDIENTE: insertar la captura del diagrama jerárquico de la Parte 3.
+% No describir detalles visuales que no puedan comprobarse en la captura.
+
+\subsubsection*{Descripción del programa}
+Para implementar esta parte utilizamos cuatro archivos \textit{.vhd}:
+
+\begin{itemize}
+    \item \textbf{mux2a1.vhd}: contiene el multiplexor 2 a 1 de un bit. Su salida depende del selector $S$: cuando $S=0$ pasa $X$ y cuando $S=1$ pasa $Y$.
+    \item \textbf{mux5a1.vhd}: contiene cuatro instancias de \texttt{mux2a1}. Las señales internas $c1$, $c2$ y $c3$ guardan los resultados intermedios de las primeras tres instancias, mientras que la cuarta instancia selecciona entre $c3$ y $Y$.
+    \item \textbf{mux5a1de3bits.vhd}: contiene tres instancias de \texttt{mux5a1}, una por cada bit de las entradas y de la salida. Las tres reciben el mismo selector de tres bits.
+    \item \textbf{mux5a1\_3bits.vhd}: es el módulo superior. Recibe los 18 interruptores de la tarjeta, conecta los tres selectores y distribuye los quince bits restantes entre las cinco entradas de datos.
+\end{itemize}
+
+En el módulo superior, $SW_{17-15}$ corresponde a las entradas de selección. Los interruptores restantes se dividen en grupos de tres bits: $SW_{14-12}$ para $U$, $SW_{11-9}$ para $V$, $SW_{8-6}$ para $W$, $SW_{5-3}$ para $X$ y $SW_{2-0}$ para $Y$. Los LEDs rojos reflejan el estado de los interruptores y la salida del multiplexor se conecta a $LEDG_{2-0}$.
+
+\subsection*{Parte 4}
+\subsubsection*{Descripción del ejercicio}
+En esta parte diseñamos un decodificador de siete segmentos con tres entradas binarias, $C_2,C_1,C_0$, y siete salidas que controlan los segmentos del display. El objetivo es mostrar un carácter dependiendo del valor que recibimos en las entradas.
+
+El instructivo establece cuatro caracteres y un estado en blanco. La correspondencia entre las entradas y los caracteres es la siguiente:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+$C_2C_1C_0$ & Carácter \\
+\hline
+000 & S \\
+001 & I \\
+010 & E \\
+011 & t \\
+100--111 & En blanco \\
+\hline
+\end{tabular}
+\end{center}
+
+Los segmentos del display se identifican mediante los índices del 0 al 6. En la tarjeta DE2, cada segmento se enciende cuando recibe un cero lógico, por lo que las salidas del decodificador trabajan con lógica activa en bajo. Para esta parte debemos describir las salidas mediante expresiones booleanas, sin utilizar estructuras de selección de alto nivel.
+
+\subsubsection*{Descripción del programa}
+Para implementar el decodificador utilizamos dos archivos \textit{.vhd}:
+
+\begin{itemize}
+    \item \textbf{deco.vhd}: recibe las tres señales $C_2,C_1,C_0$ y calcula las siete salidas booleanas $a,b,c,d,e,f,g$. En este archivo escribimos directamente las expresiones lógicas de cada segmento.
+    \item \textbf{decoder.vhd}: funciona como módulo superior. Recibe los tres bits de $SW_{2-0}$, instancia el componente \texttt{deco} y conecta sus siete salidas con el puerto $HEX0$.
+\end{itemize}
+
+En la instancia del decodificador, las salidas se conectan en el orden $a,b,c,d,e,f,g$ hacia los índices $HEX0(6)$ hasta $HEX0(0)$, respectivamente. De esta forma, el módulo superior adapta las señales calculadas por el decodificador al puerto del display de la tarjeta.
+
+% NOTA: Las expresiones booleanas específicas se mantienen en deco.vhd.
+% Si se incluyen aquí, deben transcribirse directamente del archivo fuente
+% y conservar la correspondencia de índices definida por la conexión anterior.
+% PENDIENTE: agregar captura del diagrama o evidencia que solicite el profesor.
+
+\subsection*{Parte 5}
+\subsubsection*{Descripción del ejercicio}
+En esta parte integramos el multiplexor 5 a 1 de tres bits de la Parte 3 con el decodificador de siete segmentos de la Parte 4. Con esta conexión seleccionamos uno de cinco códigos de tres bits y lo convertimos en las señales necesarias para mostrar un carácter en un display.
+
+El instructivo pide extender este diseño para utilizar cinco displays y mostrar la cadena \textit{SIEtE}. Para lograrlo, los cinco displays reciben el mismo selector $SW_{17-15}$, pero cada uno utiliza un orden diferente de las cinco entradas de datos. De esta manera, al cambiar el selector, los caracteres se desplazan circularmente y se obtiene el patrón indicado en la tabla del instructivo.
+
+La tabla muestra la distribución que debe observarse en los cinco displays:
+
+\begin{center}
+\begin{tabular}{|c|ccccc|}
+\hline
+$SW_{17}SW_{16}SW_{15}$ & $HEX4$ & $HEX3$ & $HEX2$ & $HEX1$ & $HEX0$ \\
+\hline
+000 & S & I & E & t & E \\
+001 & I & E & t & E & S \\
+010 & E & t & E & S & I \\
+011 & t & E & S & I & E \\
+100 & E & S & I & E & t \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Diagrama jerárquico}
+En esta parte conectamos el multiplexor y el decodificador como subcircuitos. El módulo \texttt{muxdeco} reúne ambos bloques: primero selecciona una entrada de tres bits y después convierte el resultado en las siete señales del display. El módulo \texttt{parte5} contiene cinco instancias de \texttt{muxdeco}, una para cada display.
+
+% PENDIENTE: insertar la captura del diagrama jerárquico de la Parte 5
+% cuando se encuentre disponible en las evidencias.
+
+\subsubsection*{Descripción del programa}
+Para realizar la integración utilizamos dos archivos \textit{.vhd}:
+
+\begin{itemize}
+    \item \textbf{muxdeco.vhd}: recibe el selector y las cinco entradas de tres bits. Primero instancia \texttt{mux5a1de3bits} para obtener el código seleccionado y después conecta ese resultado al componente \texttt{decoder}. Finalmente, entrega las siete señales al puerto \texttt{DISPLAY}.
+    \item \textbf{parte5.vhd}: es el módulo superior. Recibe los interruptores de la tarjeta y contiene cinco instancias de \texttt{muxdeco}, conectadas a los puertos $HEX0$ a $HEX4$. En cada instancia cambiamos el orden de las entradas $U,V,W,X,Y$ para conseguir el desplazamiento circular solicitado.
+\end{itemize}
+
+Los interruptores $SW_{17-15}$ funcionan como selector común para los cinco multiplexores. Los interruptores $SW_{14-0}$ contienen los cinco códigos de tres bits que representan los caracteres. Las salidas de cada decodificador se conectan a uno de los cinco displays de siete segmentos.
+
+\subsection*{Parte 6}
+\subsubsection*{Descripción del ejercicio}
+En esta última parte extendemos el diseño anterior para utilizar los ocho displays de siete segmentos de la tarjeta DE2. El circuito debe mostrar una palabra de cinco caracteres o menos y permitir que la palabra se desplace de forma circular al cambiar los interruptores de selección $SW_{17-15}$.
+
+El instructivo proporciona una tabla con las ocho combinaciones del selector y la posición que debe ocupar cada carácter en los displays $HEX7$ a $HEX0$. Cuando la palabra tiene menos de ocho caracteres, los espacios restantes deben mostrarse en blanco. De esta manera, el desplazamiento permite recorrer las distintas posiciones de la palabra sin modificar los códigos de los caracteres almacenados en los interruptores.
+
+El patrón de rotación que debemos obtener es el siguiente:
+
+\begin{center}
+\small
+\begin{tabular}{|c|cccccccc|}
+\hline
+$SW_{17}SW_{16}SW_{15}$ & $HEX7$ & $HEX6$ & $HEX5$ & $HEX4$ & $HEX3$ & $HEX2$ & $HEX1$ & $HEX0$ \\
+\hline
+000 & -- & -- & -- & S & I & E & t & E \\
+001 & -- & -- & S & I & E & t & E & -- \\
+010 & -- & S & I & E & t & E & -- & -- \\
+011 & S & I & E & t & E & -- & -- & -- \\
+100 & I & E & t & E & -- & -- & -- & S \\
+101 & E & t & E & -- & -- & -- & S & I \\
+110 & t & E & -- & -- & -- & S & I & E \\
+111 & E & -- & -- & -- & S & I & E & t \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Descripción del programa}
+La implementación debe reutilizar los bloques desarrollados en las partes anteriores: el multiplexor 5 a 1 de tres bits y el decodificador de siete segmentos. A partir de ellos se deben generar las conexiones necesarias para controlar los ocho displays, distribuyendo las entradas de datos y las señales de selección de acuerdo con la tabla de rotación del instructivo.
+
+% PENDIENTE: el archivo PRACTICA-1/Parte6/parte6.vhd contiene únicamente
+% una declaración incompleta de la entidad. No describir una implementación
+% que todavía no está desarrollada.
+
+% ------------------- RESULTADOS -------------------
 \section*{Resultados}
 \begin{comment}
 Es obligatorio incluir los resultados de simulación obtenidos con el IDE. Para los casos en que no se puedan mostrar todas las combinaciones de los puertos de entrada, se deberán elegir casos representativos.
@@ -149,104 +333,53 @@ También podrás incluir tablas de datos o diagramas RTL obtenidos con el IDE.
 Cada elemento incluido dentro de las categorías anteriores debe contener un párrafo de texto que lo describa.
 \end{comment}
 
+\subsection*{Parte 1}
+% PENDIENTE: agregar evidencia de la prueba en la tarjeta DE2.
+% No redactar resultados hasta contar con la captura correspondiente.
 
 \subsection*{Parte 2}
 La estructura final después de compilar es la siguiente:
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.7\textwidth]{../images/figura4.jpg}
-        \caption{Diagrama RTL de la Parte 2}
-        \label{fig:diagramaRTL}
-        \end{figure}
 
-Posteriormente se hizo un archivo \textit{waveform} para visualizar el funcionamiento.
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.74\textwidth]{../images/figura5.png}
-        \caption{Simulación de la Parte 2}
-        \label{fig:simulacion}
-        \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figura4.jpg}
+    \caption{Diagrama RTL de la Parte 2.}
+    \label{fig:diagramaRTL}
+\end{figure}
 
-Como se observa en la simulación, cuando S=0, se muestra X, y cuando S=1, se muestra Y.
-\begin{comment}
-    \subsection*{Parte 3}
-\subsubsection*{Descripción del Ejercicio}
-Construir un multiplexor 5 a 1 de 3 bits de ancho a partir de cuatro multiplexores 2 a 1, empleando una entrada de selección de tres bits \(s_2 s_1 s_0\).
+Posteriormente, hicimos un archivo \textit{waveform} para visualizar el funcionamiento.
 
-\textbf{Funcionamiento:}
-\begin{itemize}
-    \item El circuito se compone utilizando múltiples instancias de multiplexores 2 a 1 para permitir la selección de una salida \(m\) entre cinco posibles entradas (\(u, v, w, x\) y \(y\)) conforme a la tabla de verdad del circuito.
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.7\textwidth]{../images/figura_parte3_circuito.jpg}
-        \caption{Multiplexor 5 a 1 y su diagrama jerárquico}
-        \label{fig:mux5a1}
-        \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.74\textwidth]{figura5.png}
+    \caption{Simulación de la Parte 2.}
+    \label{fig:simulacion}
+\end{figure}
 
-    \item Para extenderlo a un ancho de 3 bits, se requieren tres instancias del circuito multiplexor 5 a 1, donde cada una procesa un bit correspondiente de las entradas vectoriales \(U, V, W, X\) y \(Y\) en función del selector de 3 bits.
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.6\textwidth]{../images/figura_parte3_vectorial.jpg}
-        \caption{Multiplexor 5 a 1 de tres bits de ancho}
-        \label{fig:mux5a1_3bits}
-        \end{figure}
-\end{itemize}
+Como podemos observar en la simulación, cuando $S=0$ se muestra la entrada $X$, y cuando $S=1$ se muestra la entrada $Y$.
 
-\subsubsection*{Diagrama Jerárquico}
-La jerarquía de los archivos \textit{.vhd} para esta sección contempla la reutilización del bloque multiplexor 2 a 1 básico como subcomponente dentro del módulo principal del multiplexor 5 a 1 de 3 bits:
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.5\textwidth]{../images/figura_parte3_jerarquia.jpg}
-        \caption{Diagrama Jerárquico de la Parte 3}
-        \label{fig:diagramajerarquico_parte3}
-        \end{figure}
-
-Podemos observar que el diseño modular permite interconectar los selectores \(SW_{17-15}\) con las entradas de datos distribuidas en los switches restantes de la tarjeta Altera DE2 para reflejar el resultado en los LEDs correspondientes.
-
-\subsubsection*{Descripción del Programa}
-En general tenemos que crear los archivos \textit{.vhd} necesarios para estructurar la jerarquía:
-\begin{itemize}
-    \item \textbf{mux2a1.vhd}: El multiplexor de 1 bit base utilizado como bloque fundamental para construir la lógica de selección de 5 a 1.
-    \item \textbf{mux\_3bit\_5to1.vhd}: El \textit{ENTITY} de este archivo gestiona las entradas vectoriales de 3 bits y el selector general, quedando estructurado de la siguiente manera:  
-    \begin{lstlisting}[language=VHDL]
-ENTITY mux_3bit_5to1 IS
-    PORT(SIGNAL S, U, V, W, X, Y: IN BIT_VECTOR(2 DOWNTO 0);
-         SIGNAL M: OUT BIT_VECTOR(2 DOWNTO 0));
-END mux_3bit_5to1;
-    \end{lstlisting}
-    Después en el \textit{ARCHITECTURE} realizamos la instanciación de los componentes multiplexores 2 a 1 interconectados para evaluar las cinco opciones según los bits de selección \(S_2, S_1, S_0\).
-\end{itemize}
-Posteriormente las asignaciones en la entidad principal deberán de ir de la siguiente manera:
-\begin{itemize}
-    \item \(SW_{17-15}\) : Para las entradas de selección \(s_2 s_1 s_0\).
-    \item \(SW_{14-0}\) : Divididos en grupos de 3 bits para alimentar las entradas \(U, V, W, X\) y \(Y\).
-    \item Los \textbf{LEDR} se conectan a los \textbf{SW} para monitorear el estado de las entradas.
-    \item La salida \textbf{M} se conecta a los \textbf{LEDG}_{2-0} para reflejar el resultado de la selección.
-\end{itemize}
-
-\section*{Resultados}
 \subsection*{Parte 3}
-La estructura final obtenida en el diagrama RTL después de compilar el proyecto es la siguiente:
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.7\textwidth]{../images/figura_parte3_rtl.jpg}
-        \caption{Diagrama RTL de la Parte 3}
-        \label{fig:diagramaRTL_parte3}
-        \end{figure}
+% PENDIENTE: no puedo continuar con la redacción de los resultados de esta parte
+% hasta que se adjunten las capturas correspondientes.
+% Se necesita la evidencia del diagrama RTL y de la simulación de las combinaciones
+% representativas del selector. Una vez adjuntadas, describiré lo que se observa.
 
-Posteriormente se generó un archivo \textit{waveform} de simulación para comprobar que la conmutación de las entradas de selección arroja la salida correcta según la tabla de verdad.
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.74\textwidth]{../images/figura_parte3_simulacion.jpg}
-        \caption{Simulación de la Parte 3}
-        \label{fig:simulacion_parte3}
-        \end{figure}
-    \subsection*{Parte 4}
-    \subsection*{Parte 5}
-    \subsection*{Parte 6}
-\end{comment}
+\subsection*{Parte 4}
+% PENDIENTE: no puedo continuar con la redacción de los resultados de esta parte
+% hasta que se adjunten las capturas correspondientes.
+% Se necesita evidencia del funcionamiento del decodificador para los códigos
+% 000, 001, 010, 011 y, de ser posible, un código de espacio en blanco.
 
+\subsection*{Parte 5}
+% PENDIENTE: no puedo continuar con la redacción de los resultados de esta parte
+% hasta que se adjunten las capturas correspondientes.
+% Se necesita evidencia del funcionamiento de los cinco displays y de las
+% combinaciones de selección que producen la rotación de la cadena SIEtE.
 
+\subsection*{Parte 6}
+% PENDIENTE: no hay una implementación completa en el archivo VHDL ni evidencia
+% experimental. Esta sección queda pendiente hasta que se desarrolle el circuito
+% y se adjunten las capturas de su funcionamiento.
 
 %Las observaciones y conclusiones son sobre TODA la práctica
 \section*{Observaciones}
@@ -263,7 +396,6 @@ Posteriormente se generó un archivo \textit{waveform} de simulación para compr
 %Quien no entregue conclusión tiene cero en el reporte para el proyecto de diseño correspondiente.
 
 \end{document}
-
 
 %Características de envío de los proyectos
 %Cada proyecto de diseño consistirá de un número de ejercicios interdependeintes que irán incrementando en complejidad de forma gradual. Por cada ejercicio deberás crear un nuevo proyecto en la herramienta CAD. Al final de cada semana deberás publicar, en el apartado del aula virtual correspondiente al proyecto de diseño, los archivos *.qar correspondientes a cada ejercicio. Deberás renombrar cada archivo *.qar con el número del proyecto de diseño y ejercicio al que corresponde. Por ejemplo, si el archivo sumador8.qar corresponde al ejercicio 3 del proyecto de diseño 2, deberás renombrarlo como P2-3.qar. En el tutorial de la 1er semana se explicará como crear un archivo *.qar.
