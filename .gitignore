@@ -17,3 +17,29 @@
 *.done
 *.jdi
 *.sopcinfo
+
+# --- Archivos temporales de LaTeX ---
+*.aux
+*.log
+*.toc
+*.out
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.idx
+*.ilg
+*.ind
+*.nlo
+*.nls
+*.bcf
+*.xml
+*.pdf
+
+# Presentaciones (Beamer)
+*.nav
+*.snm
+*.vrb
