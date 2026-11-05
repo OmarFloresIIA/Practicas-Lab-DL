@@ -298,6 +298,26 @@ En esta última parte extendemos el diseño anterior para utilizar los ocho disp
 
 El instructivo proporciona una tabla con las ocho combinaciones del selector y la posición que debe ocupar cada carácter en los displays $HEX7$ a $HEX0$. Cuando la palabra tiene menos de ocho caracteres, los espacios restantes deben mostrarse en blanco. De esta manera, el desplazamiento permite recorrer las distintas posiciones de la palabra sin modificar los códigos de los caracteres almacenados en los interruptores.
 
+El patrón de rotación que debemos obtener es el siguiente:
+
+\begin{center}
+\small
+\begin{tabular}{|c|cccccccc|}
+\hline
+$SW_{17}SW_{16}SW_{15}$ & $HEX7$ & $HEX6$ & $HEX5$ & $HEX4$ & $HEX3$ & $HEX2$ & $HEX1$ & $HEX0$ \\
+\hline
+000 & -- & -- & -- & S & I & E & t & E \\
+001 & -- & -- & S & I & E & t & E & -- \\
+010 & -- & S & I & E & t & E & -- & -- \\
+011 & S & I & E & t & E & -- & -- & -- \\
+100 & I & E & t & E & -- & -- & -- & S \\
+101 & E & t & E & -- & -- & -- & S & I \\
+110 & t & E & -- & -- & -- & S & I & E \\
+111 & E & -- & -- & -- & S & I & E & t \\
+\hline
+\end{tabular}
+\end{center}
+
 \subsubsection*{Descripción del programa}
 La implementación debe reutilizar los bloques desarrollados en las partes anteriores: el multiplexor 5 a 1 de tres bits y el decodificador de siete segmentos. A partir de ellos se deben generar las conexiones necesarias para controlar los ocho displays, distribuyendo las entradas de datos y las señales de selección de acuerdo con la tabla de rotación del instructivo.
 
