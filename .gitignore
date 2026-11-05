@@ -1,0 +1,19 @@
+# Carpetas generadas por Quartus
+/db/
+/incremental_db/
+/output_files/
+/simulation/
+**/simulation/
+/greybox_tmp/
+/sld_db/
+
+# Archivos de reportes y temporales
+*.rpt
+*.summary
+*.pin
+*.qws
+*.bak
+*.smsg
+*.done
+*.jdi
+*.sopcinfo

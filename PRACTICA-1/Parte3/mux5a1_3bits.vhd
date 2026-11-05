@@ -1,0 +1,27 @@
+ENTITY mux5a1_3bits IS 
+
+PORT (SIGNAL SW: IN BIT_VECTOR(17 DOWNTO 0);
+		SIGNAL LEDG: OUT BIT_VECTOR(2 DOWNTO 0);
+		SIGNAL LEDR: OUT BIT_VECTOR(17 DOWNTO 0));
+
+END mux5a1_3bits;
+
+ARCHITECTURE X OF mux5a1_3bits IS
+
+COMPONENT mux5a1de3bits IS 
+PORT(SIGNAL S, U, V, W, X, Y: IN BIT_VECTOR(2 DOWNTO 0);
+	  SIGNAL M: OUT BIT_VECTOR(2 DOWNTO 0));
+END COMPONENT;
+BEGIN
+bit1: mux5a1de3bits PORT MAP (SW(17 DOWNTO 15),	-- S
+										SW(14 DOWNTO 12), -- U
+										SW(11 DOWNTO 9), 	-- V
+										SW(8 DOWNTO 6), 	-- W
+										SW(5 DOWNTO 3), 	-- X
+										SW(2 DOWNTO 0), 	-- Y
+										LEDG(2 DOWNTO 0)	-- M
+										);
+LEDR <= SW;
+END X;
+
+

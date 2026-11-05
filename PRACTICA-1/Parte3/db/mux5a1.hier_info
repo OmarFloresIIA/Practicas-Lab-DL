@@ -1,0 +1,165 @@
+|mux5a1de3bits
+S[0] => mux5a1:MUX1.S0
+S[0] => mux5a1:MUX2.S0
+S[0] => mux5a1:MUX3.S0
+S[1] => mux5a1:MUX1.S1
+S[1] => mux5a1:MUX2.S1
+S[1] => mux5a1:MUX3.S1
+S[2] => mux5a1:MUX1.S2
+S[2] => mux5a1:MUX2.S2
+S[2] => mux5a1:MUX3.S2
+U[0] => mux5a1:MUX3.U
+U[1] => mux5a1:MUX2.U
+U[2] => mux5a1:MUX1.U
+V[0] => mux5a1:MUX3.V
+V[1] => mux5a1:MUX2.V
+V[2] => mux5a1:MUX1.V
+W[0] => mux5a1:MUX3.W
+W[1] => mux5a1:MUX2.W
+W[2] => mux5a1:MUX1.W
+X[0] => mux5a1:MUX3.X
+X[1] => mux5a1:MUX2.X
+X[2] => mux5a1:MUX1.X
+Y[0] => mux5a1:MUX3.Y
+Y[1] => mux5a1:MUX2.Y
+Y[2] => mux5a1:MUX1.Y
+M[0] <= mux5a1:MUX3.M
+M[1] <= mux5a1:MUX2.M
+M[2] <= mux5a1:MUX1.M
+
+
+|mux5a1de3bits|mux5a1:MUX1
+S2 => mux2a1:mux4.S
+S1 => mux2a1:mux3.S
+S0 => mux2a1:mux1.S
+S0 => mux2a1:mux2.S
+U => mux2a1:mux1.X
+V => mux2a1:mux1.Y
+W => mux2a1:mux2.X
+X => mux2a1:mux2.Y
+Y => mux2a1:mux4.Y
+M <= mux2a1:mux4.M
+
+
+|mux5a1de3bits|mux5a1:MUX1|mux2a1:mux1
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX1|mux2a1:mux2
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX1|mux2a1:mux3
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX1|mux2a1:mux4
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX2
+S2 => mux2a1:mux4.S
+S1 => mux2a1:mux3.S
+S0 => mux2a1:mux1.S
+S0 => mux2a1:mux2.S
+U => mux2a1:mux1.X
+V => mux2a1:mux1.Y
+W => mux2a1:mux2.X
+X => mux2a1:mux2.Y
+Y => mux2a1:mux4.Y
+M <= mux2a1:mux4.M
+
+
+|mux5a1de3bits|mux5a1:MUX2|mux2a1:mux1
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX2|mux2a1:mux2
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX2|mux2a1:mux3
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX2|mux2a1:mux4
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX3
+S2 => mux2a1:mux4.S
+S1 => mux2a1:mux3.S
+S0 => mux2a1:mux1.S
+S0 => mux2a1:mux2.S
+U => mux2a1:mux1.X
+V => mux2a1:mux1.Y
+W => mux2a1:mux2.X
+X => mux2a1:mux2.Y
+Y => mux2a1:mux4.Y
+M <= mux2a1:mux4.M
+
+
+|mux5a1de3bits|mux5a1:MUX3|mux2a1:mux1
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX3|mux2a1:mux2
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX3|mux2a1:mux3
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|mux5a1de3bits|mux5a1:MUX3|mux2a1:mux4
+S => M.IN0
+S => M.IN0
+X => M.IN1
+Y => M.IN1
+M <= M.DB_MAX_OUTPUT_PORT_TYPE
+
+

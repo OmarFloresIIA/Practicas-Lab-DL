@@ -1,0 +1,119 @@
+m255
+K3
+13
+cModel Technology
+Z0 dD:\ProyectosQuartus\PRACTICA-1\Parte2\simulation\qsim
+vmux2a1
+Z1 !s100 0i5]DSWQ7[2jHXn`Fj`Sg2
+Z2 IJSQ[LFU9jFTIB^EVhaMih0
+Z3 VCiI>]_>=8[XPOi6k;nDRb2
+Z4 dD:\ProyectosQuartus\PRACTICA-1\Parte2\simulation\qsim
+Z5 w1792888074
+Z6 8mux2a1.vo
+Z7 Fmux2a1.vo
+L0 31
+Z8 OV;L;10.1d;51
+r1
+31
+Z9 !s90 -work|work|mux2a1.vo|
+Z10 o-work work -O0
+!i10b 1
+!s85 0
+Z11 !s108 1792888074.753000
+Z12 !s107 mux2a1.vo|
+!s101 -O0
+vmux2a1_8bits
+Z13 !s100 0]Zg^R@Y5?2hSPNAj1]I51
+Z14 I]K1I1[C:dSEUCWm1<TOhd3
+Z15 VcHUaO]<:L=c27UiW>C89L2
+R4
+Z16 w1792887918
+R6
+R7
+L0 31
+R8
+r1
+31
+R9
+R10
+Z17 !s108 1792887918.386000
+R12
+!i10b 1
+!s85 0
+!s101 -O0
+vmux2a1_8bits_vlg_vec_tst
+Z18 !s100 UZJ]8BDP`=edSkbn;AUag1
+Z19 I80h2FV>4TigI?oC;9zkb:3
+Z20 Vm=gamScQc1c`6l1dn@W>T1
+R4
+R16
+Z21 8mux2a1.vt
+Z22 Fmux2a1.vt
+L0 29
+R8
+r1
+31
+Z23 !s90 -work|work|mux2a1.vt|
+R10
+Z24 !s108 1792887919.035000
+Z25 !s107 mux2a1.vt|
+!i10b 1
+!s85 0
+!s101 -O0
+vmux2a1_vlg_check_tst
+!i10b 1
+Z26 !s100 eERabeTLk?>=NhocmB9R]2
+Z27 IMIl4=nmC1TYQAm<nn`c?^3
+Z28 VXLMFUK?imIm<@kVz0nDM_2
+R4
+R5
+R21
+R22
+L0 61
+R8
+r1
+!s85 0
+31
+Z29 !s108 1792888075.323000
+Z30 !s107 mux2a1.vt|
+R23
+!s101 -O0
+R10
+vmux2a1_vlg_sample_tst
+!i10b 1
+Z31 !s100 mSC5W0_>oc95OLZgOil[i2
+Z32 IU9zNI@JU[WQh]2fk3eJ:B2
+Z33 Vli75?IhKO_zbI`@NG0mNa1
+R4
+R5
+R21
+R22
+L0 29
+R8
+r1
+!s85 0
+31
+R29
+R30
+R23
+!s101 -O0
+R10
+vmux2a1_vlg_vec_tst
+!i10b 1
+Z34 !s100 ]_[X2i9Ra3:?=S_dfizoU0
+Z35 I;LniU]g8aYf=jO@hIRcFX0
+Z36 VfWCPoef[SBa60meUDVl>n1
+R4
+R5
+R21
+R22
+Z37 L0 281
+R8
+r1
+!s85 0
+31
+R29
+R30
+R23
+!s101 -O0
+R10

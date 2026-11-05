@@ -1,0 +1,20 @@
+ENTITY mux5a1 IS
+PORT(SIGNAL S2, S1, S0, U, V, W, X, Y: IN BIT;
+	  SIGNAL M: OUT BIT);
+END mux5a1;
+
+ARCHITECTURE X OF mux5a1 IS
+COMPONENT mux2a1 IS 
+PORT (SIGNAL S, X,Y: IN BIT;
+		SIGNAL M: OUT BIT);
+END COMPONENT;
+SIGNAL c1, c2, c3: BIT;
+
+
+BEGIN
+mux1: mux2a1 PORT MAP (S0,U,V,c1);
+mux2: mux2a1 PORT MAP (S0,W,X,c2);
+mux3: mux2a1 PORT MAP (S1,c1,c2,c3);
+mux4: mux2a1 PORT MAP (S2,c3,Y,M);
+
+END X;

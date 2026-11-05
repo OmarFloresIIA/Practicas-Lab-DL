@@ -1,0 +1,2 @@
+ENTITY parte6 IS
+ PORT
